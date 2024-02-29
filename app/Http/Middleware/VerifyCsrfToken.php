@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // 기존에 있는 다른 예외들을 유지하면서,
+        '/check-reservation', // 이 라인을 추가하여 CSRF 검증에서 해당 라우트를 제외합니다.
     ];
 }
