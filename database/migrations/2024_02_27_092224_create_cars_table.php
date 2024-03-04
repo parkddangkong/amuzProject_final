@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('model');
             $table->string('registration_number')->unique();
             $table->timestamps();
-            $table->string('image')->nullable(); // 이미지 URL을 저장할 수 있는 새로운 컬럼을 추가합니다.
+            $table->string('image')->nullable(); 
         });
     }
 

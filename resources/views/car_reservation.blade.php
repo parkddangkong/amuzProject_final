@@ -3,19 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF 토큰 메타 태그 추가 -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Create Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+            display: block;
+        }
+
+        input[type="datetime-local"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            width: calc(100% - 16px); 
+        }
+
+        button[type="submit"] {
+            padding: 12px 20px;
+            background-color: #ffa500;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #ff8000; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>차량 예약하기</h1>
+        
+        <form id="reservationForm" action="{{ route('car_reservation.store') }}" method="POST">
+            @csrf
+
+            <div>
+                <label for="car_id">차종:</label>
+                <span>{{ $car->make }} {{ $car->model }}</span>
+                <input type="hidden" name="car_id" id="car_id" value="{{ $car->id }}">
+            </div>
+            <br>
+
+            <div>
+                <label for="start_time">예약 시작시간:</label>
+                <input type="datetime-local" id="start_time" name="start_time" required>
+            </div>
+            <br>
+
+            <div>
+                <label for="end_time">예약 마감시간:</label>
+                <input type="datetime-local" id="end_time" name="end_time" required>
+            </div>
+            <br>
+            
+            <button type="submit">예약완료하기</button>
+        </form>
+    </div>
+
     <script>
-        // 폼 제출 이벤트 리스너
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('reservationForm').addEventListener('submit', function (event) {
-                event.preventDefault(); // 폼 제출 방지
+                event.preventDefault();
 
                 var carId = document.getElementById('car_id').value;
                 var startTime = document.getElementById('start_time').value;
                 var endTime = document.getElementById('end_time').value;
 
-                // AJAX 요청을 보내는 부분
                 fetch('/check-reservation', {
                     method: 'POST',
                     headers: {
@@ -27,10 +115,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.isAvailable === false) {
-                        // 예약이 불가능한 경우 경고 창 표시
                         alert('이미 예약이 되어있으므로 예약시간을 다시 확인해주시길 바랍니다.');
                     } else {
-                        // 예약이 가능한 경우 폼 제출
                         alert('예약을 완료했습니다.');
                         event.target.submit();
                     }
@@ -42,36 +128,5 @@
             });
         });
     </script>
-</head>
-<body>
-    <h1>Create a New Reservation</h1>
-    
-    <!-- 예약 폼 -->
-    <form id="reservationForm" action="{{ route('car_reservation.store') }}" method="POST">
-        @csrf
-
-        <!-- 차량 정보 표시 -->
-        <div>
-            <label for="car_id">Car:</label>
-            <span>{{ $car->make }} {{ $car->model }}</span>
-            <!-- Hidden 필드로 차량 ID 전달 -->
-            <input type="hidden" name="car_id" id="car_id" value="{{ $car->id }}">
-        </div>
-        <br>
-
-        <!-- 예약 시작 시간 입력 -->
-        <label for="start_time">Start Time:</label>
-        <input type="datetime-local" id="start_time" name="start_time" required>
-        <br>
-
-        <!-- 예약 종료 시간 입력 -->
-        <label for="end_time">End Time:</label>
-        <input type="datetime-local" id="end_time" name="end_time" required>
-        <br>
-        
-        <!-- 예약 제출 버튼 -->
-        <button type="submit">Submit Reservation</button>
-    </form>
-
 </body>
 </html>

@@ -16,17 +16,14 @@ class CarController extends Controller
 
     public function list()
 {
-    // 데이터베이스에서 모든 차량 데이터를 가져옵니다.
+
     $cars = Car::all();
 
-    // 가져온 데이터를 'car_list'라는 뷰로 전달합니다.
-    // 뷰에서는 이 데이터를 사용하여 사용자에게 차량 목록을 보여줄 수 있습니다.
     return view('car_list', ['cars' => $cars]);
 }
 
 public function store(Request $request)
 {
-    // 데이터 유효성 검사
     $validated = $request->validate([
         'make' => 'required|max:255',
         'model' => 'required|max:255',
@@ -59,5 +56,11 @@ public function show($id)
 
     return view('car_show', compact('car', 'reservations'));
 }
+
+public function showContactPage()
+{
+    return view('contact');
+}
+
 
 }
